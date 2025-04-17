@@ -535,7 +535,7 @@ def reset_user_command(message):
 #cuối
 from flask import Flask, request, abort
 
-WEBHOOK_HOST = 'https://say79.onrender.com'  # Đổi thành domain của bạn trên Render
+WEBHOOK_HOST = 'https://xvip.onrender.com'  # Đổi thành domain của bạn trên Render
 WEBHOOK_PATH = f"/{API_TOKEN}"
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
