@@ -14,7 +14,7 @@ API_TOKEN ='8042458188:AAGzHV2X5NsV_w1UTlVu38KNhCWRk0d-bxE'  # Updated token
 bot = telebot.TeleBot(API_TOKEN)
 NHOM_CANTHAMGIA = ['@hupcodenhacai1','@kiemtienfree17']
 user_data, invited_users, captcha_codes = {}, {}, {}
-min_withdraw_amount = 5000  # Minimum withdrawal amount
+min_withdraw_amount = 20000  # Minimum withdrawal amount
 admins = [7014048216]  # Admin IDs
 from PIL import Image, ImageDraw, ImageFont
 import random
@@ -120,8 +120,8 @@ def handle_captcha_response(message):
             bot.send_message(message.chat.id, f"🫡 Chào Mừng Bạn Quay Trở Lại! Số Dư Của Bạn Là {balance} đồng. Tiếp Tục Mời Bạn Bè Kiếm Code Ngay Nào", reply_markup=markup)
 
             if referrer_id and referrer_id in user_data:
-                update_user_balance(referrer_id, 2000)
-                bot.send_message(referrer_id, f"Bạn đã nhận được 2000 đồng khi mời {message.from_user.username} tham gia.")
+                update_user_balance(referrer_id, 4000)
+                bot.send_message(referrer_id, f"Bạn đã nhận được 4000 đồng khi mời {message.from_user.username} tham gia.")
                 invited_users.pop(str(user_id))
                 save_data(invited_users_file, invited_users)
         else:
@@ -197,8 +197,8 @@ def handle_start(message):
 
             # Thưởng cho người mời
             if referrer_id in user_data:
-                update_user_balance(referrer_id, 2000 )  # Thưởng cho người mời
-                bot.send_message(referrer_id, f"🎉 Bạn đã nhận được 2000 đồng khi mời {message.from_user.username} tham gia.")
+                update_user_balance(referrer_id, 4000 )  # Thưởng cho người mời
+                bot.send_message(referrer_id, f"🎉 Bạn đã nhận được 4000 đồng khi mời {message.from_user.username} tham gia.")
 
         # Xóa thông tin người mời sau khi thưởng
         if str(user_id) in invited_users:
@@ -242,8 +242,8 @@ def check_channels(call):
         bot.send_message(call.message.chat.id, f"🫡 Chào Mừng Bạn Quay Trở Lại! Số Dư Của Bạn Là {balance} đồng. Tiếp Tục Mời Bạn Bè Kiếm Code Ngay Nào", reply_markup=markup)
 
         if referrer_id and referrer_id in user_data:
-            update_user_balance(referrer_id, 2000)  # Thưởng cho người mời
-            bot.send_message(referrer_id, f"Bạn đã nhận được 2000 đồng khi mời {call.from_user.username} tham gia.")
+            update_user_balance(referrer_id, 4000)  # Thưởng cho người mời
+            bot.send_message(referrer_id, f"Bạn đã nhận được 4000 đồng khi mời {call.from_user.username} tham gia.")
             invited_users.pop(str(user_id))
             save_data(invited_users_file, invited_users)
     else:
@@ -359,15 +359,15 @@ def handle_withdraw(message):
     user_id = message.from_user.id
     if str(user_id) in user_data and user_data[str(user_id)]['balance'] >= min_withdraw_amount:
         withdraw_instructions = """
-✅ Số Tiền Rút Tối Thiểu 5K
+✅ Số Tiền Rút Tối Thiểu 20K
 👉 Làm Theo Các Lệnh Sau Đây Để Rút Tiền
 
 ▶/doicode [ ID TELE ] [ SỐ TIỀN ] 
-VD : /doicode 7214228954 5000
+VD : /doicode 7214228954 20000
         """
         bot.send_message(message.chat.id, withdraw_instructions)
     else:
-        bot.send_message(message.chat.id, "⚠️ Bạn cần có số dư ít nhất 5.000 đồng để thực hiện lệnh rút tiền.")
+        bot.send_message(message.chat.id, "⚠️ Bạn cần có số dư ít nhất 20.000 đồng để thực hiện lệnh rút tiền.")
 
 # Tải danh sách mã đổi thưởng từ file
 def load_redeemable_codes(filename):
@@ -433,11 +433,11 @@ def handle_withdraw_request(message):
                 else:
                     bot.send_message(message.chat.id, "⛔️ Số dư của bạn không đủ để thực hiện giao dịch.")
             else:
-                bot.send_message(message.chat.id, "⚠️ Số tiền rút tối thiểu là 5.000 VND.")
+                bot.send_message(message.chat.id, "⚠️ Số tiền rút tối thiểu là 20.000 VND.")
         else:
             bot.send_message(message.chat.id, "🚫 Sai cú pháp. Vui lòng nhập theo mẫu: /doicode [uid game] [số tiền]")
     else:
-        bot.send_message(message.chat.id, "🔒 Bạn cần có số dư ít nhất 5.000 VND và đã đăng ký để thực hiện lệnh rút tiền.")
+        bot.send_message(message.chat.id, "🔒 Bạn cần có số dư ít nhất 20.000 VND và đã đăng ký để thực hiện lệnh rút tiền.")
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith(('approve_', 'decline_')))
@@ -559,4 +559,3 @@ if __name__ == '__main__':
     bot.remove_webhook()
     bot.set_webhook(url=WEBHOOK_URL)
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
-
