@@ -10,7 +10,7 @@ from io import BytesIO  # Thư viện hỗ trợ làm việc với dữ liệu n
 
 # Bot information and required channels
 # Bot information and required channels
-API_TOKEN ='7483890062:AAGeOE8AAmq6N4l2PGIqEwVhyPln1HOE5eU'  # Updated token
+API_TOKEN ='7831061599:AAHFQLmAm5guFfBfOMq9uB03NeepkROIRng'  # Updated token
 bot = telebot.TeleBot(API_TOKEN)
 NHOM_CANTHAMGIA = ['@hupcodenhacai1','@cheoreflink','@kenhphimviet69','@Sanh_Casino_Game','@dongxuvang']
 user_data, invited_users, captcha_codes = {}, {}, {}
@@ -254,11 +254,11 @@ def handle_invite_friends(message):
     user_id = message.from_user.id
     invite_link = f"https://t.me/{bot.get_me().username}?start={user_id}"
 
-    photo_url = "https://images.app.goo.gl/KNCCCphbbkVGQKGm9"
+    photo_url = "https://images.app.goo.gl/rpUZeqG47TrHz6GR8"
     caption = """
 <b>❗️ NHẬN GIFCODE RẤT ĐƠN GIẢN CHỈ CẦN VÀI THAO TÁC
 ✅ MỜI BẠN BÈ THAM GIA BOT NHẬN NGAY 2000đ 
-✅ https://say79.me// LÀ TÊN MIỀN CHÍNH HÃNG DUY NHẤT!</b>
+✅ https://xvip71.winp// LÀ TÊN MIỀN CHÍNH HÃNG DUY NHẤT!</b>
 
 👤 Link Mời Bạn Bè ( Bấm vào coppy ) :<code> {invite_link}</code>
     """.format(invite_link=invite_link)
