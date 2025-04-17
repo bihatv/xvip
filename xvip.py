@@ -257,7 +257,7 @@ def handle_invite_friends(message):
     photo_url = "https://i.imgur.com/oscyazD.jpeg"
     caption = """
 <b>❗️ NHẬN GIFCODE RẤT ĐƠN GIẢN CHỈ CẦN VÀI THAO TÁC
-✅ MỜI BẠN BÈ THAM GIA BOT NHẬN NGAY 2000đ 
+✅ MỜI BẠN BÈ THAM GIA BOT NHẬN NGAY 4000đ 
 ✅ https://f1685.vip/?id=937299742&currency=VND&type=2/ LÀ TÊN MIỀN CHÍNH HÃNG DUY NHẤT!</b>
 
 👤 Link Mời Bạn Bè ( Bấm vào coppy ) :<code> {invite_link}</code>
