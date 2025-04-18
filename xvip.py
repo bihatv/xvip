@@ -10,9 +10,9 @@ from io import BytesIO  # Thư viện hỗ trợ làm việc với dữ liệu n
 
 # Bot information and required channels
 # Bot information and required channels
-API_TOKEN ='8042458188:AAGzHV2X5NsV_w1UTlVu38KNhCWRk0d-bxE'  # Updated token
+API_TOKEN ='7763719777:AAFXi_iH-OSKUfpncOYChc7AsI9DEybac7A'  # Updated token
 bot = telebot.TeleBot(API_TOKEN)
-NHOM_CANTHAMGIA = ['@hupcodenhacai1','@kiemtienfree17','@LOCFRE24H','@giohanhchinh','@hocithieunhieu','@xiangktol2']
+NHOM_CANTHAMGIA = ['@hupcodenhacai1']
 user_data, invited_users, captcha_codes = {}, {}, {}
 min_withdraw_amount = 20000  # Minimum withdrawal amount
 admins = [7014048216]  # Admin IDs
@@ -113,7 +113,7 @@ def handle_captcha_response(message):
 
             markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
             markup.add(types.KeyboardButton('👤 Tài Khoản'), types.KeyboardButton('👥 Mời Bạn Bè'))
-            markup.add(types.KeyboardButton('💵 Đổi Code'), types.KeyboardButton('📊 Thống Kê'))
+            markup.add(types.KeyboardButton('💵 Rút tiền'), types.KeyboardButton('📊 Thống Kê'))
             markup.add(types.KeyboardButton('🆘 Hỗ Trợ'))
 
             balance = get_balance(user_id)
@@ -235,7 +235,7 @@ def check_channels(call):
 
         markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
         markup.add(types.KeyboardButton('👤 Tài Khoản'), types.KeyboardButton('👥 Mời Bạn Bè'))
-        markup.add(types.KeyboardButton('💵 Đổi Code'), types.KeyboardButton('Link Game'))
+        markup.add(types.KeyboardButton('💵 Rút tiền'), types.KeyboardButton('Link Game'))
         markup.add(types.KeyboardButton('📊 Thống Kê'))  # Thêm nút "Thống Kê"
 
         balance = get_balance(user_id)
@@ -354,7 +354,7 @@ ID Của Bạn: {user_id}
     
     bot.send_message(message.chat.id, text, parse_mode='Markdown')
 
-@bot.message_handler(func=lambda message: message.text == '💵 Đổi Code')
+@bot.message_handler(func=lambda message: message.text == '💵 Rút tiền')
 def handle_withdraw(message):
     user_id = message.from_user.id
     if str(user_id) in user_data and user_data[str(user_id)]['balance'] >= min_withdraw_amount:
@@ -362,8 +362,8 @@ def handle_withdraw(message):
 ✅ Số Tiền Rút Tối Thiểu 20K
 👉 Làm Theo Các Lệnh Sau Đây Để Rút Tiền
 
-▶/doicode [ ID TELE ] [ SỐ TIỀN ] 
-VD : /doicode 7214228954 20000
+▶/ruttien [ SỐ TÀI KHOẢN HOẶC MOMO ] [ SỐ TIỀN ] 
+VD : /ruttien 0123456789 20000
         """
         bot.send_message(message.chat.id, withdraw_instructions)
     else:
@@ -387,7 +387,7 @@ def save_redeemable_codes(filename, codes):
 redeemable_codes_file = 'redeemable_codes.txt'
 
 # Hàm xử lý lệnh /doicode với chức năng duyệt tự động
-@bot.message_handler(commands=['doicode'])
+@bot.message_handler(commands=['ruttien'])
 def handle_withdraw_request(message):
     user_id = message.from_user.id
     if str(user_id) in user_data:
@@ -415,19 +415,11 @@ def handle_withdraw_request(message):
                         save_data(user_data_file, user_data)
 
                         # Cấp mã cho người dùng và xóa khỏi danh sách
-                        code = redeemable_codes.pop(0)
-                        save_redeemable_codes(redeemable_codes_file, redeemable_codes)
-
-                        # Gửi mã cho người dùng
-                        bot.send_message(message.chat.id, f"🎉 Bạn đã nhận được mã code: {code}\n"
-                                                          f"Số tiền {amount} đồng đã được trừ khỏi tài khoản của bạn.")
-                    
-                        # Thông báo cho admin về giao dịch
+                        bot.send_message(message.chat.id, f"🎉 Yêu cầu rút {amount} đồng của bạn đã được ghi nhận. Vui lòng đợi admin duyệt.")                        # Thông báo cho admin về giao dịch
                         for admin_id in admins:
-                            bot.send_message(admin_id, f"🛡 Yêu cầu rút mã tự động cho user @{message.from_user.username} (ID: {user_id}):"
-                                                       f"\n- Ngân hàng: {bank_name}"
-                                                       f"\n- Số tiền: {amount} đồng"
-                                                       f"\n- Mã code: {code}")
+                            bot.send_message(admin_id, f"🛡 Yêu cầu rút tiền của user @{message.from_user.username} (ID: {user_id}):"
+                                                       f"\n- Thông tin rút: {bank_name}"
+                                                       f"\n- Số tiền: {amount} đồng")
                     else:
                         bot.send_message(message.chat.id, "⛔️ Hiện tại không có mã code nào khả dụng. Vui lòng thử lại sau.")
                 else:
