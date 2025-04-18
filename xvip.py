@@ -359,11 +359,15 @@ def handle_withdraw(message):
     user_id = message.from_user.id
     if str(user_id) in user_data and user_data[str(user_id)]['balance'] >= min_withdraw_amount:
         withdraw_instructions = """
-✅ Số Tiền Rút Tối Thiểu 20K
-👉 Làm Theo Các Lệnh Sau Đây Để Rút Tiền
+🏦 Hướng dẫn rút tiền:
+✅ Số tiền rút tối thiểu: 20.000 VND
+💬 Cú pháp:
+/ruttien [nganhang] [sotaikhoan] [sotien]
 
-▶/ruttien [ SỐ TÀI KHOẢN HOẶC MOMO ] [ SỐ TIỀN ] 
-VD : /ruttien 0123456789 20000
+📌 Ví dụ:
+/ruttien vietcombank 0123456789 20000
+
+Các ngân hàng hỗ trợ: Vietcombank, ACB, VPBank, MBBank, TPBank, BIDV, Techcombank, Agribank
         """
         bot.send_message(message.chat.id, withdraw_instructions)
     else:
@@ -390,46 +394,58 @@ redeemable_codes_file = 'redeemable_codes.txt'
 @bot.message_handler(commands=['ruttien'])
 def handle_withdraw_request(message):
     user_id = message.from_user.id
-    if str(user_id) in user_data:
-        current_balance = user_data[str(user_id)]['balance']
-        details = message.text.split()
-        
-        # Kiểm tra cú pháp lệnh
-        if len(details) == 3:
-            bank_name = details[1]
-            try:
-                amount = int(details[2])
-            except ValueError:
-                bot.send_message(message.chat.id, "🚫 Số tiền phải là một số nguyên hợp lệ.")
-                return
 
-            # Kiểm tra điều kiện số dư tối thiểu
-            if amount >= min_withdraw_amount:
-                if current_balance >= amount:
-                    # Tải mã đổi thưởng có sẵn
-                    redeemable_codes = load_redeemable_codes(redeemable_codes_file)
-                    
-                    if redeemable_codes:
-                        # Trừ số dư
-                        user_data[str(user_id)]['balance'] -= amount
-                        save_data(user_data_file, user_data)
+    if str(user_id) not in user_data:
+        bot.send_message(message.chat.id, "🔒 Bạn chưa có tài khoản hoặc chưa đủ điều kiện rút tiền.")
+        return
 
-                        # Cấp mã cho người dùng và xóa khỏi danh sách
-                        bot.send_message(message.chat.id, f"🎉 Yêu cầu rút {amount} đồng của bạn đã được ghi nhận. Vui lòng đợi admin duyệt.")                        # Thông báo cho admin về giao dịch
-                        for admin_id in admins:
-                            bot.send_message(admin_id, f"🛡 Yêu cầu rút tiền của user @{message.from_user.username} (ID: {user_id}):"
-                                                       f"\n- Thông tin rút: {bank_name}"
-                                                       f"\n- Số tiền: {amount} đồng")
-                    else:
-                        bot.send_message(message.chat.id, "⛔️ Hiện tại không có mã code nào khả dụng. Vui lòng thử lại sau.")
-                else:
-                    bot.send_message(message.chat.id, "⛔️ Số dư của bạn không đủ để thực hiện giao dịch.")
-            else:
-                bot.send_message(message.chat.id, "⚠️ Số tiền rút tối thiểu là 20.000 VND.")
-        else:
-            bot.send_message(message.chat.id, "🚫 Sai cú pháp. Vui lòng nhập theo mẫu: /doicode [uid game] [số tiền]")
-    else:
-        bot.send_message(message.chat.id, "🔒 Bạn cần có số dư ít nhất 20.000 VND và đã đăng ký để thực hiện lệnh rút tiền.")
+    current_balance = user_data[str(user_id)]['balance']
+    parts = message.text.split()
+
+    if len(parts) != 4:
+        bot.send_message(message.chat.id, "⚠️ Sai cú pháp!\nDùng đúng mẫu:\n/ruttien [nganhang] [sotaikhoan] [sotien]\nVí dụ: /ruttien vietcombank 0123456789 20000")
+        return
+
+    bank_name = parts[1].lower()
+    account_number = parts[2]
+    try:
+        amount = int(parts[3])
+    except ValueError:
+        bot.send_message(message.chat.id, "🚫 Số tiền phải là số nguyên hợp lệ.")
+        return
+
+    valid_banks = ['vietcombank', 'acb', 'vpbank', 'mbbank', 'tpbank', 'bidv', 'techcombank', 'agribank']
+    if bank_name not in valid_banks:
+        bot.send_message(message.chat.id, f"🏦 Ngân hàng không hợp lệ.\nChỉ hỗ trợ: {', '.join(valid_banks)}")
+        return
+
+    if amount < min_withdraw_amount:
+        bot.send_message(message.chat.id, f"⚠️ Số tiền rút tối thiểu là {min_withdraw_amount} VND.")
+        return
+
+    if current_balance < amount:
+        bot.send_message(message.chat.id, "❌ Số dư của bạn không đủ để thực hiện rút tiền.")
+        return
+
+    # Trừ tiền
+    user_data[str(user_id)]['balance'] -= amount
+    save_data(user_data_file, user_data)
+
+    # Gửi xác nhận cho người dùng
+    bot.send_message(message.chat.id, f"🎉 Yêu cầu rút {amount} VND đã được ghi nhận.\nVui lòng đợi admin duyệt giao dịch.")
+
+    # Gửi thông báo cho admin
+    # Gửi thông báo cho admin kèm nút duyệt/hủy
+for admin_id in admins:
+    markup = types.InlineKeyboardMarkup()
+    markup.add(
+        types.InlineKeyboardButton("✅ Duyệt", callback_data=f"approve_{user_id}_{amount}"),
+        types.InlineKeyboardButton("❌ Hủy", callback_data=f"decline_{user_id}_{amount}")
+    )
+    bot.send_message(admin_id, 
+        f"📤 YÊU CẦU RÚT TIỀN MỚI\n👤 User: @{message.from_user.username or user_id}\n💳 Ngân hàng: {bank_name.upper()}\n🔢 STK: {account_number}\n💰 Số tiền: {amount} VND",
+        reply_markup=markup)
+
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith(('approve_', 'decline_')))
@@ -437,7 +453,8 @@ def handle_approval(call):
     try:
         action, user_id, amount = call.data.split('_')
         if action == "approve":
-            bot.send_message(user_id, f"🎉 Yêu cầu rút tiền của bạn đã được duyệt thành công với số tiền {amount} đồng ✅.")
+            bot.send_message(user_id, f"🎉 Yêu cầu rút {amount} VND đã được admin duyệt.\n💰 Tiền sẽ được chuyển trong thời gian sớm nhất.")
+
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="✅ Đã duyệt yêu cầu rút tiền.")
         elif action == "decline":
             bot.send_message(user_id, "❌ Yêu cầu rút tiền của bạn đã bị hủy. Vui lòng liên hệ admin để biết thêm chi tiết.")
