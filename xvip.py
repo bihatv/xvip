@@ -476,7 +476,7 @@ def handle_statistics(message):
 
 @bot.message_handler(func=lambda message: message.text == '🆘 Hỗ Trợ')
 def handle_support(message):
-    bot.send_message(message.chat.id, "🆘 Bạn cần hỗ trợ? Vui lòng liên hệ với chúng tôi qua Telegram: @nguyendanh8386 Và Đợi Phản Hồi.")
+    bot.send_message(message.chat.id, "🆘 Bạn cần hỗ trợ? Vui lòng liên hệ với chúng tôi qua Telegram: @congthinh29 Và Đợi Phản Hồi.")
 
 @bot.message_handler(commands=['chatmem'])
 def handle_chatmem_command(message):
