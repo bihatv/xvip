@@ -12,7 +12,7 @@ from io import BytesIO  # Thư viện hỗ trợ làm việc với dữ liệu n
 # Bot information and required channels
 API_TOKEN ='8042458188:AAGzHV2X5NsV_w1UTlVu38KNhCWRk0d-bxE'  # Updated token
 bot = telebot.TeleBot(API_TOKEN)
-NHOM_CANTHAMGIA = ['@hupcodenhacai1','@kiemtienfree17','@LOCFRE24H','@km789pfre','@hocithieunhieu','@xiangktol2']
+NHOM_CANTHAMGIA = ['@hupcodenhacai1','@kiemtienfree17','@LOCFRE24H','@giohanhchinh','@hocithieunhieu','@xiangktol2']
 user_data, invited_users, captcha_codes = {}, {}, {}
 min_withdraw_amount = 20000  # Minimum withdrawal amount
 admins = [7014048216]  # Admin IDs
