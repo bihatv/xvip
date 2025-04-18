@@ -439,10 +439,10 @@ def handle_withdraw_request(message):
 for admin_id in admins:
     markup = types.InlineKeyboardMarkup()
     markup.add(
-        types.InlineKeyboardButton("✅ Duyệt", callback_data=f"approve_{user_id}_{amount}"),
-        types.InlineKeyboardButton("❌ Hủy", callback_data=f"decline_{user_id}_{amount}")
-    )
-    bot.send_message(admin_id, 
+    types.InlineKeyboardButton("✅ Duyệt", callback_data=f"approve_{user_id}_{amount}"),
+    types.InlineKeyboardButton("❌ Hủy", callback_data=f"decline_{user_id}_{amount}")
+)
+bot.send_message(admin_id, 
         f"📤 YÊU CẦU RÚT TIỀN MỚI\n👤 User: @{message.from_user.username or user_id}\n💳 Ngân hàng: {bank_name.upper()}\n🔢 STK: {account_number}\n💰 Số tiền: {amount} VND",
         reply_markup=markup)
 
