@@ -433,21 +433,19 @@ def handle_withdraw_request(message):
 
     # Gửi xác nhận cho người dùng
     bot.send_message(message.chat.id, f"🎉 Yêu cầu rút {amount} VND đã được ghi nhận.\nVui lòng đợi admin duyệt giao dịch.")
-
-    # Gửi thông báo cho admin
-    # Gửi thông báo cho admin kèm nút duyệt/hủy
 # Gửi thông báo cho admin kèm nút duyệt/hủy
-for admin_id in admins:
-    markup = types.InlineKeyboardMarkup()
-    markup.add(
-        types.InlineKeyboardButton("✅ Duyệt", callback_data=f"approve_{user_id}_{amount}"),
-        types.InlineKeyboardButton("❌ Hủy", callback_data=f"decline_{user_id}_{amount}")
-    )
-    bot.send_message(
-        admin_id,
-        f"📤 YÊU CẦU RÚT TIỀN MỚI\n👤 User: @{message.from_user.username or user_id}\n💳 Ngân hàng: {bank_name.upper()}\n🔢 STK: {account_number}\n💰 Số tiền: {amount} VND",
-        reply_markup=markup
-    )
+
+    for admin_id in admins:
+        markup = types.InlineKeyboardMarkup()
+        markup.add(
+            types.InlineKeyboardButton("✅ Duyệt", callback_data=f"approve_{user_id}_{amount}"),
+            types.InlineKeyboardButton("❌ Hủy", callback_data=f"decline_{user_id}_{amount}")
+        )
+        bot.send_message(
+            admin_id,
+            f"📤 YÊU CẦU RÚT TIỀN MỚI\n👤 User: @{message.from_user.username or user_id}\n💳 Ngân hàng: {bank_name.upper()}\n🔢 STK: {account_number}\n💰 Số tiền: {amount} VND",
+            reply_markup=markup
+        )
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith(('approve_', 'decline_')))
