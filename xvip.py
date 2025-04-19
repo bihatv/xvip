@@ -609,6 +609,28 @@ def add_group_command(message):
         bot.reply_to(message, "ℹ️ Nhóm đã tồn tại trong danh sách.")
 
 
+
+
+
+@bot.message_handler(commands=['removegroup'])
+def remove_group_command(message):
+    if message.from_user.id not in admins:
+        return bot.reply_to(message, "❌ Bạn không có quyền thực hiện.")
+
+    parts = message.text.split()
+    if len(parts) < 2:
+        return bot.reply_to(message, "📌 Dùng đúng cú pháp: /removegroup @tennhom")
+
+    group_to_remove = parts[1]
+    if group_to_remove in settings["groups"]:
+        settings["groups"].remove(group_to_remove)
+        bot.reply_to(message, f"✅ Đã xoá nhóm: {group_to_remove}")
+    else:
+        bot.reply_to(message, "⚠️ Không tìm thấy nhóm trong danh sách.")
+
+
+
+
 #cuối
 from flask import Flask, request, abort
 
