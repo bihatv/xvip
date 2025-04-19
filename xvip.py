@@ -631,6 +631,31 @@ def remove_group_command(message):
 
 
 
+
+
+@bot.message_handler(commands=['checkbotingroup'])
+def check_bot_in_group(message):
+    if message.from_user.id not in admins:
+        return bot.reply_to(message, "❌ Bạn không có quyền thực hiện.")
+
+    results = []
+    for group in settings["groups"]:
+        try:
+            bot_member = bot.get_chat_member(group, bot.get_me().id)
+            status = bot_member.status  # 'administrator', 'member', 'left', etc.
+
+            if status == 'administrator':
+                results.append(f"✅ {group}: Bot là quản trị viên.")
+            elif status == 'member':
+                results.append(f"⚠️ {group}: Bot chỉ là thành viên, không có quyền quản trị.")
+            else:
+                results.append(f"❌ {group}: Bot chưa được thêm vào nhóm.")
+        except Exception as e:
+            results.append(f"❌ {group}: Lỗi - {str(e)}")
+
+    reply = "\n".join(results)
+    bot.reply_to(message, reply)
+
 #cuối
 from flask import Flask, request, abort
 
