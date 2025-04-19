@@ -586,6 +586,29 @@ def set_referral_bonus(message):
     bot.reply_to(message, f"✅ Tiền thưởng mỗi lời mời mới: {parts[1]} đồng")
 
 
+
+
+
+
+
+
+@bot.message_handler(commands=['addgroup'])
+def add_group_command(message):
+    if message.from_user.id not in admins:
+        return bot.reply_to(message, "❌ Bạn không có quyền thực hiện.")
+
+    parts = message.text.split()
+    if len(parts) < 2:
+        return bot.reply_to(message, "📌 Dùng đúng cú pháp: /addgroup @tennhom")
+
+    new_group = parts[1]
+    if new_group not in settings["groups"]:
+        settings["groups"].append(new_group)
+        bot.reply_to(message, f"✅ Đã thêm nhóm mới: {new_group}")
+    else:
+        bot.reply_to(message, "ℹ️ Nhóm đã tồn tại trong danh sách.")
+
+
 #cuối
 from flask import Flask, request, abort
 
