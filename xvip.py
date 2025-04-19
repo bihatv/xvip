@@ -10,7 +10,7 @@ from io import BytesIO  # Thư viện hỗ trợ làm việc với dữ liệu n
 
 # Bot information and required channels
 # Bot information and required channels
-API_TOKEN ='7763719777:AAFXi_iH-OSKUfpncOYChc7AsI9DEybac7A'  # Updated token
+API_TOKEN ='8006444935:AAGL0UQEk2w8v3MHObKCRRYRuK-Uf_QoxXo'  # Updated token
 bot = telebot.TeleBot(API_TOKEN)
 NHOM_CANTHAMGIA = ['@hupcodenhacai1']
 user_data, invited_users, captcha_codes = {}, {}, {}
@@ -254,7 +254,7 @@ def handle_invite_friends(message):
     user_id = message.from_user.id
     invite_link = f"https://t.me/{bot.get_me().username}?start={user_id}"
 
-    photo_url = "https://i.imgur.com/oscyazD.jpeg"
+    photo_url = "https://i.imgur.com/NQ03Ek6.jpeg"
     caption = """
 <b>❗️ NHẬN GIFCODE RẤT ĐƠN GIẢN CHỈ CẦN VÀI THAO TÁC
 ✅ MỜI BẠN BÈ THAM GIA BOT NHẬN NGAY 4000đ 
